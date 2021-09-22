@@ -1,0 +1,11 @@
+- name: System Hardening
+  hosts: db
+  become: yes
+  become_method: sudo
+  gather_facts: true
+  roles:
+    - os-hardening
+    - ssh-hardening
+    - linux-system-roles.selinux
+
+    

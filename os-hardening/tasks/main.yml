@@ -1,0 +1,6 @@
+---
+# tasks file for os-hardening
+- name: OS-Hardening
+  include_tasks: os-patch.yml
+
+

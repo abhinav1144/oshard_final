@@ -1,0 +1,23 @@
+---
+  #- name: Set file permissions on /home/osiuser/.ssh/authorized_keys
+   # file:
+    #  path: /home/osiuser/.ssh/authorized_keys
+     # owner: osiuser
+      #mode: 0777
+  - name: Hardening sshd service
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      state: present
+    loop:
+      - regexp: "^PermitRootLogin"
+        line: "PermitRootLogin no"
+      - regexp: "^PasswordAuthentication"
+        line: "PasswordAuthentication yes"
+      - regexp: "^X11Forwarding"
+        line: "X11Forwarding no"
+      - regexp: "^PermitEmptyPasswords"
+        line: "PermitEmptyPasswords no"
+
+    notify: Restart sshd
