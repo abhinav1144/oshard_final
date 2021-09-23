@@ -8,7 +8,7 @@
   yum:
     name="kernel"
     state=latest
-  when:  ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  when:  ansible_distribution == "{{ os_family_2 }}" #'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
   register: yum_update
 
 - name:  Upgrade kernel package on Ubuntu/Debian server
@@ -18,25 +18,25 @@
     cache_valid_time: 3600
     name: linux-image-generic
     state: latest
-  when: ansible_distribution == "{{ ansible_facts.os_family_1 }}"
+  when: ansible_distribution == "{{ os_family_1 }}"
   register: apt_update
 
 - name: Check if reboot required after kernel update on CentOS/RedHat servers
   shell: KERNEL_NEW=$(rpm -q --last kernel |head -1 | awk '{print $1}' | sed 's/kernel-//'); KERNEL_NOW=$(uname -r); if [[ $KERNEL_NEW != $KERNEL_NOW ]]; then echo "reboot_needed"; else echo "reboot_not_needed"; fi
-  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+  when: ansible_distribution == "{{ os_family_2 }}"
   ignore_errors: true
   register: reboot_required
 
 - name: Check if a reboot is required after kernel update on Ubuntu/Debian servers
   register: reboot_required_file
   stat: path=/var/run/reboot-required get_md5=no
-  when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+  when: ansible_distribution == "{{ os_family_1 }}" #'Ubuntu' or ansible_distribution == 'Debian'
 
 - name: Reboot CentOS/RedHat systems if kernel updated
   command: shutdown -r +1  "Rebooting CentOS/RedHat Servers After Kernel Patching"
   async: 0
   poll: 0
-  when: reboot_required.changed  and (ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux')
+  when: reboot_required.changed  and (ansible_distribution == "{{ os_family_2 }}" #'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux')
   register: reboot_started_redhat
   ignore_errors: true
 
@@ -46,7 +46,7 @@
     removes: /var/run/reboot-required
   async: 300
   poll: 0
-  when: reboot_required_file.stat.exists and (ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian')
+  when: reboot_required_file.stat.exists and (ansible_distribution == "{{ os_family_1 }}" #'Ubuntu' or ansible_distribution == 'Debian')
   register: reboot_started_ubuntu
   ignore_errors: true
 
