@@ -1,4 +1,6 @@
 ---
 # vars file for os-hardening
-os_family_1: 'Ubuntu' or 'Debian'
-os_family_2: 'Red Hat Enterprise Linux' or 'CentOS'
+os_family_1: Ubuntu
+os_family_2: CentOS
+os_family_3: Red Hat Enterprise Linux
+os_family_4: Debian
