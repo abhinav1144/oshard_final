@@ -1,4 +1,4 @@
 ---
 # vars file for os-hardening
-ansible_facts.os_family_1: ubuntu
-  
+os_family_1: ubuntu
+os_family_2: Red Hat Enterprise Linux
